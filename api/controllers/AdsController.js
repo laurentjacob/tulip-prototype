@@ -20,6 +20,7 @@ module.exports = {
 			var ads_to_send = ads.filter(function(ad) { return ad.status === "available" })
 				.map(function(ad) {
 					return {
+						id: ad.id,
 						title: ad.title,
 						description: ad.description,
 						imageUrl: ad.imageUrl,
@@ -57,6 +58,7 @@ module.exports = {
 			var ads_to_send = ads.filter(function(ad) { return ad.status === "available" })
 				.map(function(ad) {
 					return {
+						id: ad.id,
 						title: ad.title,
 						description: ad.description,
 						imageUrl: ad.imageUrl,
