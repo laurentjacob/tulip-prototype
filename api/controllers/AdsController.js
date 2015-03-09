@@ -92,7 +92,7 @@ module.exports = {
 		}
 		else {
 			req.file('image').upload({
-				dirname: require('path').resolve(sails.config.appPath, 'assets/images'),
+				dirname: require('path').resolve(sails.config.appPath, 'images'),
 				maxBytes: 10000000 // 10 MB
 			}, function whenDone(err, uploadedFiles) {
 				if (err) {
@@ -116,7 +116,7 @@ module.exports = {
 				    	title: title,
 				    	description: description,
 				    	price: price,
-				    	imageUrl: "images/" + fileName,
+				    	imageUrl: "images/" + fileName
 				    })
 				    .then(function(ad) {
 				    	res.status(201).send(Message.createSuccess('Successfully posted an ad', {ad_id: ad.id}))
@@ -152,6 +152,24 @@ module.exports = {
 				res.status(500).send(Message.createError(err));
 			});
 		}
+	},
+
+	getImage: function(req, res) {
+		var fileName = req.param('name');
+
+		var SkipperDisk = require('skipper-disk');
+    var fileAdapter = SkipperDisk(/* optional opts */);
+
+    // TODO: do checks on fileName
+
+    var fd = sails.config.appPath + "/images/" + fileName;
+
+    fileAdapter.read(fd)
+    .on('error', function(err) {
+    	res.status(500).send(Message.createError(err));
+    })
+    .pipe(res);
+
 	}
 };
 

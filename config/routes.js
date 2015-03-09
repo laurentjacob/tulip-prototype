@@ -49,7 +49,8 @@ module.exports.routes = {
   'GET  /api/ads/getAds'       : 'AdsController.getAds',
   'GET  /api/ads/searchAds'    : 'AdsController.searchAds',
   'POST /api/ads/newAd'        : 'AdsController.newAd',
-  'PUT  /api/ads/updateStatus' : 'AdsController.updateStatus'
+  'PUT  /api/ads/updateStatus' : 'AdsController.updateStatus',
+  'GET  /images/:name'         : 'AdsController.getImage'
 
 
 };
