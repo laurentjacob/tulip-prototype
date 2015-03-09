@@ -92,7 +92,7 @@ module.exports = {
 		}
 		else {
 			req.file('image').upload({
-				dirname: require('path').resolve(sails.config.appPath, '/assets/images'),
+				dirname: require('path').resolve(sails.config.appPath, 'assets/images'),
 				maxBytes: 10000000 // 10 MB
 			}, function whenDone(err, uploadedFiles) {
 				if (err) {
@@ -105,31 +105,28 @@ module.exports = {
 			    }
 
 			    else {
-				    var baseUrl = sails.getBaseUrl();
 
-				    console.log("uploadedFiles ", uploadedFiles);
-				    console.log("uploadedFiles[0] ", uploadedFiles[0]);				    
+			    	// TODO: check that the file is actually an image
+			    	//			 with uploadedFiles[0].type
 
-				    res.status(200).send("Working so far");
+			    	var fd = uploadedFiles[0].fd;
+			    	var fileName = fd.substring(fd.lastIndexOf("/") + 1);
 
-				    // Ads.create({
-				    // 	title: title,
-				    // 	description: description,
-				    // 	price: price,
-				    // 	imageUrl: "",
-				    // 	imageFd: uploadedFiles[0].fd
-				    // })
-
-				    // http://sailsjs.org/#!/documentation/concepts/File-Uploads
-
-				    // Create the ad
-
-				    // return 201 with id if it successfully created
+				    Ads.create({
+				    	title: title,
+				    	description: description,
+				    	price: price,
+				    	imageUrl: "images/" + fileName,
+				    })
+				    .then(function(ad) {
+				    	res.status(201).send(Message.createSuccess('Successfully posted an ad', {ad_id: ad.id}))
+				    })
+				    .catch(function(err) {
+				    	res.status(500).send(Message.createError(err));
+				    })
 			    }
-
 			})
 		}
-
 	},
 
 	updateStatus: function(req, res) {
