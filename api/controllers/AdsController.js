@@ -92,24 +92,40 @@ module.exports = {
 		}
 		else {
 			req.file('image').upload({
+				dirname: require('path').resolve(sails.config.appPath, '/assets/images'),
 				maxBytes: 10000000 // 10 MB
 			}, function whenDone(err, uploadedFiles) {
 				if (err) {
-			    	return res.status(500).send(Message.createError(err));
+			    	res.status(500).send(Message.createError(err));
 			    }
 
 			    // If no files were uploaded, respond with an error.
-			    if (uploadedFiles.length === 0){
+			    else if (uploadedFiles.length === 0){
 			    	res.status(400).send(Message.createError('No file was uploaded'));
 			    }
 
-			    var baseUrl = sails.getBaseUrl();
+			    else {
+				    var baseUrl = sails.getBaseUrl();
 
-			    // http://sailsjs.org/#!/documentation/concepts/File-Uploads
+				    console.log("uploadedFiles ", uploadedFiles);
+				    console.log("uploadedFiles[0] ", uploadedFiles[0]);				    
 
-			    // Create the ad
+				    res.status(200).send("Working so far");
 
-			    // return 201 with id if it successfully created
+				    // Ads.create({
+				    // 	title: title,
+				    // 	description: description,
+				    // 	price: price,
+				    // 	imageUrl: "",
+				    // 	imageFd: uploadedFiles[0].fd
+				    // })
+
+				    // http://sailsjs.org/#!/documentation/concepts/File-Uploads
+
+				    // Create the ad
+
+				    // return 201 with id if it successfully created
+			    }
 
 			})
 		}
