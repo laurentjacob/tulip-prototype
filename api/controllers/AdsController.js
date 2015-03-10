@@ -15,10 +15,9 @@ module.exports = {
 
 		var skipAmount = NUMBER_OF_ADS * pageNumber;
 
-		Ads.find({limit: NUMBER_OF_ADS, skip: skipAmount, sort: 'createdAt DESC' })
+		Ads.find({where: {status: 'available'}, limit: NUMBER_OF_ADS, skip: skipAmount, sort: 'createdAt DESC' })
 		.then(function(ads) {
-			var ads_to_send = ads.filter(function(ad) { return ad.status === "available" })
-				.map(function(ad) {
+			var ads_to_send = ads.map(function(ad) {
 					return {
 						id: ad.id,
 						title: ad.title,
@@ -48,14 +47,16 @@ module.exports = {
 		var searchStr = req.param('searchStr') || '';
 
 		Ads.find({
-			where: {'contains': searchStr}, 
+			where: {
+				title: {'contains': searchStr},
+				status: 'available'
+			}, 
 			limit: NUMBER_OF_ADS, 
 			skip: skipAmount, 
 			sort: 'createdAt DESC'
 		})
 		.then(function(ads) {
-			var ads_to_send = ads.filter(function(ad) { return ad.status === "available" })
-				.map(function(ad) {
+			var ads_to_send = ads.map(function(ad) {
 					return {
 						id: ad.id,
 						title: ad.title,
