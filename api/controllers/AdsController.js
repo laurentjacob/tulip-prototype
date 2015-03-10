@@ -38,7 +38,6 @@ module.exports = {
 		.catch(function(err) {
 			res.status(500).send(Message.createError(err));
 		});
-
 	},
 
 	searchAds: function(req, res) {
@@ -131,6 +130,37 @@ module.exports = {
 		}
 	},
 
+	getStatus: function(req, res) {
+
+		var ids = req.param('ids');
+
+		if(ids.length === 0) {
+			res.status(400).send(Message.createError('No ad_id was provided'));
+		}
+		else {
+			Ads.find(ids)
+			.then(function(ads) {
+				if(ads.length === 0) {
+					res.status(400).send(Message.createError('No valid ad_id was provided'));
+				}
+				else {
+					res.status(200).send(Message.createSuccess(
+						'Sending status for ' + ads.length + 'ads',	
+						ads.map(function(ad) {
+							return {
+								id: ad.id,
+								status: ad.status
+							}
+						}))
+					);
+				}
+			})
+			.catch(function(err) {
+				res.status(500).send(Message.createError(err));
+			});
+		}
+	},
+
 	updateStatus: function(req, res) {
 		var ad_id = req.param('ad_id');
 		var newStatus = req.param('status');
@@ -171,7 +201,6 @@ module.exports = {
     	res.status(500).send(Message.createError(err));
     })
     .pipe(res);
-
 	}
 };
 
